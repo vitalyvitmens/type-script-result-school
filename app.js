@@ -134,3 +134,12 @@ let fn;
 fn = sum2;
 // fn = log2 // error
 fn(2, 40, log2);
+//! 1. Объединения (Union Types)
+function compute(p1, p2) {
+    if (typeof p1 === 'number' && p2 === 'number') {
+        return p1 + p2;
+    }
+    return p1.toString() + ' ' + p2.toString();
+}
+console.log(compute(4, 5));
+console.log(compute('hello', 'world'));

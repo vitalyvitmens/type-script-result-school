@@ -1,3 +1,4 @@
+//! 2. Базовые типы
 //! 1. Работа с числами
 function sum(a: number, b: number): number {
   return a + b
@@ -173,3 +174,25 @@ fn = sum2
 // fn = log2 // error
 
 fn(2, 40, log2)
+
+//! 3. Работа с типами
+//! 1. Объединения (Union Types)
+function compute(p1: number | string, p2: number | string) {
+  if (typeof p1 === 'number' && p2 === 'number') {
+    return p1 + p2
+  }
+  return p1.toString() + ' ' + p2.toString()
+}
+
+console.log(compute(4, 5))
+console.log(compute('hello', 'world'))
+
+function logError(err: string | string[]): string | void {
+  if (Array.isArray(err)) {
+    return err.reduce((acc, cur) => (acc += ' ' + cur), '')
+  } else {
+    console.log(err)
+  }
+}
+
+//! 2. Литералы (Literal Types)
