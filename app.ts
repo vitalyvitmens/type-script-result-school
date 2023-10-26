@@ -306,3 +306,100 @@ function logFlag(flag: string | boolean) {
 
 logFlag(true)
 logFlag('true')
+
+//! 4. Дженерики
+//! 1. Зачем нужны дженерики
+const array: Array<string> = ['a', 'b', 'c']
+const array2: Array<number> = [1, 2, 3]
+
+const promise = new Promise<number>((resolve) => {
+  setTimeout(() => {
+    resolve(42)
+  })
+})
+
+promise.then((value) => value.toFixed())
+
+//! 2. Функции
+function double<T>(array: T[]): T[] {
+  return array.concat(array)
+}
+
+function fill<T>(array: any[], value: T): T[] {
+  return array.fill(value)
+}
+
+const res1 = double(['a', 'b', 'c'])
+const res2 = double([1, 2, 3])
+
+const res3 = fill(['a', 'b', 'c'], 1)
+const res4 = fill([1, 2, 3], false)
+
+res1.map((item) => item.concat('s'))
+res2.map((item) => item.toFixed())
+
+function merge<T, R>(a: T, b: R): T & R {
+  return Object.assign({}, a, b)
+}
+
+const res5 = merge({ a: 1 }, { b: 2, c: { d: 3 } })
+const res6 = res5.c.d.toFixed()
+
+console.log(res1)
+console.log(res2)
+console.log(res3)
+console.log(res4)
+console.log(res5)
+console.log(res6)
+
+//! 3. Ограничения дженериков
+function log1<T extends string | number>(data: T): T {
+  console.log(data)
+  return data
+}
+
+let res7 = <string>log1('I am string')
+let res8 = log1(42) as number
+// let res9 = log1(true) // error
+
+//! 4. Оператор keyof
+const obj = { a: 1, b: 2, c: 'a', key: 77 }
+const obj2 = { test: 100 }
+
+function getValue<T extends object, R extends keyof T>(obj: T, key: R) {
+  return obj[key]
+}
+
+const res10 = getValue(obj, 'key')
+const res11 = getValue(obj2, 'test')
+
+console.log(res10)
+console.log(res11)
+
+//! 5. Классы
+class Collection<T extends string | number> {
+  constructor(private _items: T[]) {}
+
+  add(value: T) {
+    this._items.push(value)
+  }
+
+  get items(): T[] {
+    return this._items
+  }
+}
+
+const col1 = new Collection<number>([1, 2, 3])
+col1.add(4)
+
+const col2 = new Collection<string>(['a', 'b'])
+col2.add('c')
+
+class List<R> extends Collection<string> {
+  constructor(public type: R) {
+    super(['a'])
+  }
+}
+
+const list1 = new List('qwerty')
+const list2 = new List(1977)
