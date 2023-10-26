@@ -1,4 +1,5 @@
 "use strict";
+//! 2. Базовые типы
 //! 1. Работа с числами
 function sum(a, b) {
     return a + b;
@@ -134,6 +135,7 @@ let fn;
 fn = sum2;
 // fn = log2 // error
 fn(2, 40, log2);
+//! 3. Работа с типами
 //! 1. Объединения (Union Types)
 function compute(p1, p2) {
     if (typeof p1 === 'number' && p2 === 'number') {
@@ -143,3 +145,77 @@ function compute(p1, p2) {
 }
 console.log(compute(4, 5));
 console.log(compute('hello', 'world'));
+function logError(err) {
+    if (Array.isArray(err)) {
+        return err.reduce((acc, cur) => (acc += ' ' + cur), '');
+    }
+    else {
+        console.log(err);
+    }
+}
+const person3 = {
+    age: 15,
+    name: 'Egor',
+};
+function convert(data, type) {
+    if (type === 'text') {
+        return JSON.stringify(data);
+    }
+    else if (type === 'json') {
+        return { ...data };
+    }
+}
+console.log(convert({ a: 1 }, 'text'));
+console.log(convert({ b: 2 }, 'json'));
+const person4 = {
+    name: 'Egor',
+    age: 15,
+    hobbies: ['a', 'b', 'c'],
+    city: 'Mogilev',
+    street: 'Panfilovskay',
+    date: new Date(),
+};
+const userMap = {
+    // date: new Date(),
+    1: person4,
+    2: person4,
+    3: person4,
+};
+// console.log(userMap[1].name) // Egor
+// console.log(userMap[1].street) // Panfilovskay
+console.log(userMap[2].name); // Egor
+console.log(userMap[2].street); // Panfilovskay
+//! 4. unknown
+let p = 42;
+let n = p === 10; // == === || && ? !
+// let k = p + 10 // error
+if (typeof p === 'number') {
+    let k = p + 10;
+}
+//! 5. never
+function throwError(message) {
+    throw new Error(message);
+}
+function loop() {
+    while (true) { }
+}
+function rec() {
+    return rec();
+}
+//! 6. Защитники типа (Type Guard)
+function isBoolean(val) {
+    return typeof val === 'boolean';
+}
+function isString(val) {
+    return typeof val === 'string';
+}
+function logFlag(flag) {
+    if (isBoolean(flag)) {
+        console.log('Hey this is boolean');
+    }
+    else if (isString(flag)) {
+        console.log('Hey this is string');
+    }
+}
+logFlag(true);
+logFlag('true');

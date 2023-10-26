@@ -196,3 +196,113 @@ function logError(err: string | string[]): string | void {
 }
 
 //! 2. Литералы (Literal Types)
+type OutputType = 'text' | 'json'
+type Person = { age: number; name: string }
+
+const person3: Person = {
+  age: 15,
+  name: 'Egor',
+}
+
+function convert(data: object, type: OutputType) {
+  if (type === 'text') {
+    return JSON.stringify(data)
+  } else if (type === 'json') {
+    return { ...data }
+  }
+}
+
+console.log(convert({ a: 1 }, 'text'))
+console.log(convert({ b: 2 }, 'json'))
+
+//! 3. Интерфейсы
+// type User = {
+//   name: string
+//   age: number
+//   hobbies: string[]
+// }
+
+// type CallbackFn = (data: string[]) => void
+
+interface User {
+  name: string
+  age: number
+  hobbies: string[]
+}
+
+interface Address {
+  city: string
+  street: string
+}
+
+interface FullUser extends User, Address {
+  date: Date
+}
+
+const person4: FullUser = {
+  name: 'Egor',
+  age: 15,
+  hobbies: ['a', 'b', 'c'],
+  city: 'Mogilev',
+  street: 'Panfilovskay',
+  date: new Date(),
+}
+
+interface UserMap {
+  [key: number]: FullUser
+  date?: Date
+}
+
+const userMap = {
+  // date: new Date(),
+  1: person4,
+  2: person4,
+  3: person4,
+} as UserMap
+
+// console.log(userMap[1].name) // Egor
+// console.log(userMap[1].street) // Panfilovskay
+console.log(userMap[2].name) // Egor
+console.log(userMap[2].street) // Panfilovskay
+
+//! 4. unknown
+let p: unknown = 42
+
+let n = p === 10 // == === || && ? !
+// let k = p + 10 // error
+if (typeof p === 'number') {
+  let k = p + 10
+}
+
+//! 5. never
+function throwError(message: string): never {
+  throw new Error(message)
+}
+
+function loop(): never {
+  while (true) {}
+}
+
+function rec(): never {
+  return rec()
+}
+
+//! 6. Защитники типа (Type Guard)
+function isBoolean(val: string | boolean): val is boolean {
+  return typeof val === 'boolean'
+}
+
+function isString(val: string | boolean): val is string {
+  return typeof val === 'string'
+}
+
+function logFlag(flag: string | boolean) {
+  if (isBoolean(flag)) {
+    console.log('Hey this is boolean')
+  } else if (isString(flag)) {
+    console.log('Hey this is string')
+  }
+}
+
+logFlag(true)
+logFlag('true')
