@@ -14,13 +14,10 @@ const totalPrice = ({
   discount = 0,
   isInstallment,
   months = 12,
-}: TotalPrice): number => {
-  const priceWithDiscount = price * (1 - discount * 0.01)
-
-  return Math.round(
-    isInstallment ? priceWithDiscount / months : priceWithDiscount
-  )
-}
+}: TotalPrice): number =>
+  isInstallment
+    ? (price * (1 - discount * 0.01)) / months
+    : price * (1 - discount * 0.01)
 
 const price = totalPrice({
   price: 100000,
