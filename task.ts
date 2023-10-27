@@ -1,8 +1,6 @@
 //! Задание #1
 // Напишите и типизируйте функцию, рассчитывающую стоимость с учетом скидки и рассрочки на заданное количество месяцев:
-// const totalPrice = ({ price, discount, isInstallment, months }) => {
-// Your code here...
-// }
+// const totalPrice = ({ price, discount, isInstallment, months }) => { }
 
 interface TotalPrice {
   price: number
@@ -17,14 +15,11 @@ const totalPrice = ({
   isInstallment,
   months = 12,
 }: TotalPrice): number => {
-  if (discount) {
-    discount = discount / 100
-  }
+  const priceWithDiscount = price * (1 - discount * 0.01)
 
-  const priceWithDiscount = price - price * discount
-  const result = isInstallment ? priceWithDiscount / months : priceWithDiscount
-
-  return Number(result.toFixed())
+  return Math.round(
+    isInstallment ? priceWithDiscount / months : priceWithDiscount
+  )
 }
 
 const price = totalPrice({
