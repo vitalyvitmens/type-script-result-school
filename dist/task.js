@@ -8,4 +8,4 @@ const price = totalPrice({
     isInstallment: true,
     months: 12,
 });
-console.log(price); // 6250
+console.log(price);

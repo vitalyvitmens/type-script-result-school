@@ -1,0 +1,1 @@
+function analytics(): void {}
