@@ -377,6 +377,40 @@ console.log(res10)
 console.log(res11)
 
 //! 5. Классы
+class UserClass {
+  name: string
+  birthYear: Date
+  hobbies: string[] = []
+
+  constructor(name: string, birthYear?: Date) {
+    this.name = name
+    this.birthYear = birthYear ?? new Date()
+  }
+
+  getHobbies(): string[] {
+    return this.hobbies
+  }
+
+  addHobby(hobby: string): void {
+    this.hobbies.push(hobby)
+  }
+
+  setName(newName: string): this {
+    this.name = newName
+    return this
+  }
+}
+
+const user = new UserClass('Egor', new Date())
+user.addHobby('coding')
+user.addHobby('gaming')
+user.setName('Egorka').addHobby('relax')
+const allHobbiesToUpperCase = user.getHobbies().map((s) => s.toUpperCase())
+
+console.log('user from UserClass:', user)
+console.log(user.getHobbies())
+console.log('allHobbiesToUpperCase:', allHobbiesToUpperCase)
+
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}
 
