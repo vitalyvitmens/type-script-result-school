@@ -459,7 +459,7 @@ class Figure {
   constructor() {
     this.id = Math.random()
   }
-  
+
   protected getId(): number {
     return this.id
   }
@@ -543,6 +543,29 @@ class Component implements Lifecycle, ComponentOnChange {
 }
 
 //! Абстрактные классы
+abstract class Logger {
+  abstract log(messege: string): void
+
+  table(data: object) {
+    console.table(data)
+  }
+}
+
+// const Logger = new Logger() // не возможно создать экземпляр абстрактного класса
+
+class MessageLogger extends Logger {
+  log(messege: string): void {
+    console.log(messege)
+  }
+}
+
+const logger = new MessageLogger()
+logger.log('Hello')
+logger.table({
+  a: 1.1,
+  b: 1.2,
+  c: { a: 2.1, b: 2.2, c: 2.3, d: { a: 3.1, b: 3.2, c: 3.3 } },
+})
 
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}

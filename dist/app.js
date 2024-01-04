@@ -298,6 +298,44 @@ console.log('Box.TYPE:', Box.TYPE);
 console.log('Figure.BASE_TYPE:', Figure.BASE_TYPE);
 console.log('Box.BASE_TYPE:', Box.BASE_TYPE);
 Box.logId();
+class Car {
+    model;
+    color;
+    constructor(model, color) {
+        this.model = model;
+        this.color = color;
+    }
+}
+const ford = new Car('ford', 'red');
+class Component {
+    hasChanged = false;
+    onChange(data) {
+        if (data > 1) {
+            return true;
+        }
+        return false;
+    }
+    onInit() {
+        console.log('Component on init');
+    }
+}
+class Logger {
+    table(data) {
+        console.table(data);
+    }
+}
+class MessageLogger extends Logger {
+    log(messege) {
+        console.log(messege);
+    }
+}
+const logger = new MessageLogger();
+logger.log('Hello');
+logger.table({
+    a: 1.1,
+    b: 1.2,
+    c: { a: 2.1, b: 2.2, c: 2.3, d: { a: 3.1, b: 3.2, c: 3.3 } },
+});
 class Collection {
     _items;
     constructor(_items) {
