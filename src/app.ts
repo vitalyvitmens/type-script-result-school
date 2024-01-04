@@ -378,38 +378,56 @@ console.log(res11)
 
 //! 5. Классы
 class UserClass {
-  name: string
+  _name: string
   birthYear: Date
-  hobbies: string[] = []
+  _hobbies: string[] = ['workout']
 
   constructor(name: string, birthYear?: Date) {
-    this.name = name
+    this._name = name
     this.birthYear = birthYear ?? new Date()
   }
 
-  getHobbies(): string[] {
-    return this.hobbies
+  get hobbies(): string[] {
+    // this.setName('Egorka')
+    console.log('Getting hobbies...')
+    return this._hobbies
   }
 
-  addHobby(hobby: string): void {
-    this.hobbies.push(hobby)
+  set name(newName: string) {
+    this._name = newName
+    
   }
 
-  setName(newName: string): this {
-    this.name = newName
-    return this
-  }
+  // getHobbies(): string[] {
+  //   return this.hobbies
+  // }
+
+//   addHobby(hobby: string): void {
+//     this.hobbies.push(hobby)
+//   }
+
+  // setName(newName: string): this {
+  //   this.name = newName
+  //   return this
+  // }
 }
 
-const user = new UserClass('Egor', new Date())
-user.addHobby('coding')
-user.addHobby('gaming')
-user.setName('Egorka').addHobby('relax')
-const allHobbiesToUpperCase = user.getHobbies().map((s) => s.toUpperCase())
 
-console.log('user from UserClass:', user)
-console.log(user.getHobbies())
-console.log('allHobbiesToUpperCase:', allHobbiesToUpperCase)
+
+const user = new UserClass('Egor', new Date())
+// user.addHobby('coding')
+// user.addHobby('gaming')
+// user.setName('Egorka').addHobby('relax')
+// const allHobbiesToUpperCase = user.getHobbies().map((s) => s.toUpperCase())
+const userHobbyFromGetter = user.hobbies
+const newUserName = user.name = 'Egorka'
+
+// console.log('user from UserClass:', user)
+// console.log(user.getHobbies())
+// console.log('allHobbiesToUpperCase:', allHobbiesToUpperCase)
+console.log('userHobbyFromGetter:', userHobbyFromGetter)
+console.log('newUserName:', newUserName)
+console.log('user._name:', user._name)
 
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}

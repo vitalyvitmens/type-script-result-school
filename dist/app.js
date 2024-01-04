@@ -230,32 +230,27 @@ const res11 = getValue(obj2, 'test');
 console.log(res10);
 console.log(res11);
 class UserClass {
-    name;
+    _name;
     birthYear;
-    hobbies = [];
+    _hobbies = ['workout'];
     constructor(name, birthYear) {
-        this.name = name;
+        this._name = name;
         this.birthYear = birthYear ?? new Date();
     }
-    getHobbies() {
-        return this.hobbies;
+    get hobbies() {
+        console.log('Getting hobbies...');
+        return this._hobbies;
     }
-    addHobby(hobby) {
-        this.hobbies.push(hobby);
-    }
-    setName(newName) {
-        this.name = newName;
-        return this;
+    set name(newName) {
+        this._name = newName;
     }
 }
 const user = new UserClass('Egor', new Date());
-user.addHobby('coding');
-user.addHobby('gaming');
-user.setName('Egorka').addHobby('relax');
-const allHobbiesToUpperCase = user.getHobbies().map((s) => s.toUpperCase());
-console.log('user from UserClass:', user);
-console.log(user.getHobbies());
-console.log('allHobbiesToUpperCase:', allHobbiesToUpperCase);
+const userHobbyFromGetter = user.hobbies;
+const newUserName = user.name = 'Egorka';
+console.log('userHobbyFromGetter:', userHobbyFromGetter);
+console.log('newUserName:', newUserName);
+console.log('user._name:', user._name);
 class Collection {
     _items;
     constructor(_items) {
