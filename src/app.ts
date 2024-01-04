@@ -446,6 +446,38 @@ console.log('user._name:', user._name)
 console.log('date:', user.date)
 console.log('user.isProgrammer():', user.isProgrammer())
 
+class Figure {
+  public size: number = 10
+  public color: string = 'red'
+  // protected id: number
+  private id: number
+
+  constructor() {
+    this.id = Math.random()
+  }
+
+  protected getId(): number {
+    return this.id
+  }
+}
+
+class Box extends Figure {
+  #weight: number = 30
+
+  public getInfo() {
+    return {
+      size: this.size,
+      color: this.color,
+      // id: this.id,
+      id: this.getId(),
+      weight: this.#weight,
+    }
+  }
+}
+
+const box = new Box()
+console.log('box.getInfo():', box.getInfo())
+
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}
 

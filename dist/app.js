@@ -265,6 +265,30 @@ console.log('newUserName:', newUserName);
 console.log('user._name:', user._name);
 console.log('date:', user.date);
 console.log('user.isProgrammer():', user.isProgrammer());
+class Figure {
+    size = 10;
+    color = 'red';
+    id;
+    constructor() {
+        this.id = Math.random();
+    }
+    getId() {
+        return this.id;
+    }
+}
+class Box extends Figure {
+    #weight = 30;
+    getInfo() {
+        return {
+            size: this.size,
+            color: this.color,
+            id: this.getId(),
+            weight: this.#weight,
+        };
+    }
+}
+const box = new Box();
+console.log('box.getInfo():', box.getInfo());
 class Collection {
     _items;
     constructor(_items) {
