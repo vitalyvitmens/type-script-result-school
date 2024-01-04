@@ -377,6 +377,7 @@ console.log(res10)
 console.log(res11)
 
 //! 5. Классы
+//! Синтаксис классов. Методы. Геттеры и сеттеры
 class Human {
   date: Date
 
@@ -389,6 +390,7 @@ class Human {
   }
 }
 
+//! Наследование
 class UserClass extends Human {
   _name: string
   // birthYear: Date
@@ -446,6 +448,7 @@ console.log('user._name:', user._name)
 console.log('date:', user.date)
 console.log('user.isProgrammer():', user.isProgrammer())
 
+//! Модификаторы доступа. Статические методы и свойства. Модификатор readonly. Свойства параметров
 class Figure {
   static BASE_TYPE = 'FIGURE'
   public size: number = 10
@@ -456,7 +459,7 @@ class Figure {
   constructor() {
     this.id = Math.random()
   }
-
+  
   protected getId(): number {
     return this.id
   }
@@ -491,7 +494,9 @@ console.log('Figure.BASE_TYPE:', Figure.BASE_TYPE)
 console.log('Box.BASE_TYPE:', Box.BASE_TYPE)
 Box.logId()
 
+//! Свойства параметров
 class Car {
+  // упрощенная запись для инициализации классов в TypeScript, для этого модификаторы свойств (public, private, protected) пропиши в конструкторе
   // model: string
   // color: string
 
@@ -502,6 +507,42 @@ class Car {
 }
 
 const ford = new Car('ford', 'red')
+
+//! Реализация интерфейсов классами
+interface Lifecycle {
+  onInit(): void
+
+  onDestroy?(abort: boolean): void
+}
+
+interface ComponentOnChange {
+  hasChanged: boolean
+
+  onChange(data: number): boolean
+}
+
+class Component implements Lifecycle, ComponentOnChange {
+  hasChanged: boolean = false
+
+  onChange(data: number): boolean {
+    if (data > 1) {
+      return true
+    }
+    return false
+  }
+
+  onInit(): void {
+    console.log('Component on init')
+  }
+
+  // onDestroy(abort: boolean): void {
+  //   if (abort) {
+  //     console.log('Component on destroy')
+  //   }
+  // }
+}
+
+//! Абстрактные классы
 
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}
