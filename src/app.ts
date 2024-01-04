@@ -377,14 +377,27 @@ console.log(res10)
 console.log(res11)
 
 //! 5. Классы
-class UserClass {
+class Human {
+  date: Date
+
+  constructor(date: Date) {
+    this.date = date ?? new Date()
+  }
+
+  isProgrammer(): boolean {
+    return false
+  }
+}
+
+class UserClass extends Human {
   _name: string
-  birthYear: Date
+  // birthYear: Date
   _hobbies: string[] = ['workout']
 
-  constructor(name: string, birthYear?: Date) {
+  constructor(name: string, date: Date) {
+    super(date)
     this._name = name
-    this.birthYear = birthYear ?? new Date()
+    // this.birthYear = birthYear ?? new Date()
   }
 
   get hobbies(): string[] {
@@ -395,16 +408,20 @@ class UserClass {
 
   set name(newName: string) {
     this._name = newName
-    
+  }
+
+  override isProgrammer(): boolean {
+    console.log('super.isProgrammer():', super.isProgrammer())
+    return true
   }
 
   // getHobbies(): string[] {
   //   return this.hobbies
   // }
 
-//   addHobby(hobby: string): void {
-//     this.hobbies.push(hobby)
-//   }
+  //   addHobby(hobby: string): void {
+  //     this.hobbies.push(hobby)
+  //   }
 
   // setName(newName: string): this {
   //   this.name = newName
@@ -412,15 +429,13 @@ class UserClass {
   // }
 }
 
-
-
 const user = new UserClass('Egor', new Date())
 // user.addHobby('coding')
 // user.addHobby('gaming')
 // user.setName('Egorka').addHobby('relax')
 // const allHobbiesToUpperCase = user.getHobbies().map((s) => s.toUpperCase())
 const userHobbyFromGetter = user.hobbies
-const newUserName = user.name = 'Egorka'
+const newUserName = (user.name = 'Egorka')
 
 // console.log('user from UserClass:', user)
 // console.log(user.getHobbies())
@@ -428,6 +443,8 @@ const newUserName = user.name = 'Egorka'
 console.log('userHobbyFromGetter:', userHobbyFromGetter)
 console.log('newUserName:', newUserName)
 console.log('user._name:', user._name)
+console.log('date:', user.date)
+console.log('user.isProgrammer():', user.isProgrammer())
 
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}

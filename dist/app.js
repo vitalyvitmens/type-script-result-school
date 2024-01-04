@@ -229,13 +229,21 @@ const res10 = getValue(obj, 'key');
 const res11 = getValue(obj2, 'test');
 console.log(res10);
 console.log(res11);
-class UserClass {
+class Human {
+    date;
+    constructor(date) {
+        this.date = date ?? new Date();
+    }
+    isProgrammer() {
+        return false;
+    }
+}
+class UserClass extends Human {
     _name;
-    birthYear;
     _hobbies = ['workout'];
-    constructor(name, birthYear) {
+    constructor(name, date) {
+        super(date);
         this._name = name;
-        this.birthYear = birthYear ?? new Date();
     }
     get hobbies() {
         console.log('Getting hobbies...');
@@ -244,13 +252,19 @@ class UserClass {
     set name(newName) {
         this._name = newName;
     }
+    isProgrammer() {
+        console.log('super.isProgrammer():', super.isProgrammer());
+        return true;
+    }
 }
 const user = new UserClass('Egor', new Date());
 const userHobbyFromGetter = user.hobbies;
-const newUserName = user.name = 'Egorka';
+const newUserName = (user.name = 'Egorka');
 console.log('userHobbyFromGetter:', userHobbyFromGetter);
 console.log('newUserName:', newUserName);
 console.log('user._name:', user._name);
+console.log('date:', user.date);
+console.log('user.isProgrammer():', user.isProgrammer());
 class Collection {
     _items;
     constructor(_items) {
