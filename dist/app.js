@@ -266,6 +266,7 @@ console.log('user._name:', user._name);
 console.log('date:', user.date);
 console.log('user.isProgrammer():', user.isProgrammer());
 class Figure {
+    static BASE_TYPE = 'FIGURE';
     size = 10;
     color = 'red';
     id;
@@ -277,7 +278,11 @@ class Figure {
     }
 }
 class Box extends Figure {
+    static TYPE = 'BOX';
     #weight = 30;
+    static logId() {
+        console.log('Box.logId():', Math.random());
+    }
     getInfo() {
         return {
             size: this.size,
@@ -289,6 +294,10 @@ class Box extends Figure {
 }
 const box = new Box();
 console.log('box.getInfo():', box.getInfo());
+console.log('Box.TYPE:', Box.TYPE);
+console.log('Figure.BASE_TYPE:', Figure.BASE_TYPE);
+console.log('Box.BASE_TYPE:', Box.BASE_TYPE);
+Box.logId();
 class Collection {
     _items;
     constructor(_items) {

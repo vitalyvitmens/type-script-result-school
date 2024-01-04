@@ -447,6 +447,7 @@ console.log('date:', user.date)
 console.log('user.isProgrammer():', user.isProgrammer())
 
 class Figure {
+  static BASE_TYPE = 'FIGURE'
   public size: number = 10
   public color: string = 'red'
   // protected id: number
@@ -462,7 +463,13 @@ class Figure {
 }
 
 class Box extends Figure {
-  #weight: number = 30
+  static readonly TYPE = 'BOX'
+  #weight: number = 30  // вместо # рекомендуется использовать модификатор доступа private
+
+  static logId() {
+    // console.log('this:', this) // в статических методах не доступно ключевое слово this
+    console.log('Box.logId():', Math.random())
+  }
 
   public getInfo() {
     return {
@@ -475,8 +482,14 @@ class Box extends Figure {
   }
 }
 
+// Box.TYPE = 'change Box.TYPE: BOX to CHANGE_BOX' // при добавлении модификатора readonly статическое поле поменять не удастся 
+
 const box = new Box()
 console.log('box.getInfo():', box.getInfo())
+console.log('Box.TYPE:', Box.TYPE)
+console.log('Figure.BASE_TYPE:', Figure.BASE_TYPE)
+console.log('Box.BASE_TYPE:', Box.BASE_TYPE)
+Box.logId()
 
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}
