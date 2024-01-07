@@ -362,7 +362,7 @@ let res7 = <string>log1('I am string')
 let res8 = log1(42) as number
 // let res9 = log1(true) // error
 
-//! 4. Оператор keyof
+//! 4. Оператор keyof и typeof
 const obj = { a: 1, b: 2, c: 'a', key: 77 }
 const obj2 = { test: 100 }
 
@@ -375,6 +375,82 @@ const res11 = getValue(obj2, 'test')
 
 console.log(res10)
 console.log(res11)
+
+interface User2 {
+  name: string
+  age: number
+}
+
+type User2Key = keyof User2
+const key2: User2Key = 'name'
+
+const str2: string = 'hello'
+type MyString2 = typeof str2
+
+const user2: User2 = { age: 15, name: 'Egor' }
+
+type User3Key = keyof typeof user2
+
+const key3: User3Key = 'name'
+
+//! Утилиты: Partial. Readonly. Required. Omit. Pick. Extract. Exclude. ReturnType. Parameters. ConstructorParameters.
+interface User3 {
+  id?: number
+  age: number
+  name: string
+}
+// Partial
+function createAndValidate(name: string, age: number): User3 {
+  const newUser3: Partial<User3> = {}
+
+  if (name.length > 0) {
+    newUser3.name = name
+  }
+
+  if (age >= 18) {
+    newUser3.age = age
+  }
+
+  return newUser3 as User3
+}
+// Readonly
+const user3: Readonly<User3> = { age: 15, name: 'Egor' }
+// Required
+type RequiredUser3 = Required<User3>
+const createRequiredUser3: RequiredUser3 = { id: 1, age: 15, name: 'Egor' }
+
+interface User4 {
+  name: string
+  age: number
+  hobbies: []
+}
+// Omit - позволяет указать какие поля объекта нужно исключить
+type UserData4WithOmit = Omit<User4, 'hobbies'>
+// Pick - позволяет указать только те поля объекта которые нужно включить
+type UserData4WithPick = Pick<User4, 'age' | 'name'>
+// Extract - с его помощью можно передавать какой-то тип и говорить по какому условию нам необходимо распаковать только те поля, которые нам нужны
+type UserData4WithExtract = Extract<'age' | 'some' | 'hobbies', keyof User4>
+// type UserData4WithExtract = Extract<'age' | 'some' | User4, string>
+// Exclude -
+// type UserData4WithExclude = Exclude<'a' | 'b' | User4, string>
+type UserData4WithExclude = Exclude<'a' | 'b' | User4, User4>
+// ReturnType. Parameters. ConstructorParameters.
+function log4(data: string[], num: number): boolean {
+  console.log(data, num)
+  return false
+}
+
+type LogReturn = ReturnType<typeof log4>
+type LogParams = Parameters<typeof log4>[0] // type LogParams = string[]
+type LogParams2 = Parameters<typeof log4>[1] // type LogParams2 = number
+
+class User5 {
+  constructor(public name: string, public age?: number) {}
+}
+
+type UserParams = Required<ConstructorParameters<typeof User5>>[0] // type UserParams = string
+type UserParams2 = Required<ConstructorParameters<typeof User5>>[1] // type UserParams = number
+
 
 //! 5. Классы
 class Collection<T extends string | number> {
