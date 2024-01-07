@@ -718,13 +718,13 @@ interface ComponentProps {
 
 function Component2(props: ComponentProps) {
   return function (constructor: any) {
-    const node = document.querySelector(props.selector)
-    const instance = new constructor('Egor')
-
-    if (node) {
-      node.insertAdjacentHTML('afterbegin', props.template)
-      node.querySelector('span')!.textContent = instance.name
-    }
+    //! Что бы запустить файл index.html в live Server раскомментируй закомментируемые 6 строк ниже
+    // const node = document.querySelector(props.selector)
+    // const instance = new constructor('Egor')
+    // if (node) {
+    //   node.insertAdjacentHTML('afterbegin', props.template)
+    //   node.querySelector('span')!.textContent = instance.name
+    // }
   }
 }
 
@@ -742,3 +742,43 @@ class UserComponent2 {
 }
 
 const user8 = new UserComponent2('Vitaly')
+
+//! Декораторы свойств
+function MaxChildren(limit: number) {
+  return function (target: Object, key: string | symbol) {
+    // console.log(target)
+    // console.log(key)
+    let value: number
+
+    const get = () => value
+
+    const set = (newValue: number) => {
+      if (newValue > limit) {
+        value = limit
+        console.warn('Вы превысили лимит. Максимум детей:', limit)
+      } else {
+        value = newValue
+      }
+    }
+
+    Object.defineProperty(target, key, {
+      get,
+      set,
+    })
+  }
+}
+class User9 {
+  @MaxChildren(10)
+  children: number
+
+  constructor(children: number) {
+    this.children = children
+  }
+}
+
+const user91 = new User9(100)
+console.log('user91.children:', user91.children)
+const user92 = new User9(5)
+console.log('user92.children:', user92.children)
+
+//! Декораторы методов
