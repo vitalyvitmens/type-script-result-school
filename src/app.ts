@@ -345,12 +345,12 @@ function merge<T, R>(a: T, b: R): T & R {
 const res5 = merge({ a: 1 }, { b: 2, c: { d: 3 } })
 const res6 = res5.c.d.toFixed()
 
-console.log(res1)
-console.log(res2)
-console.log(res3)
-console.log(res4)
-console.log(res5)
-console.log(res6)
+console.log('res1:', res1)
+console.log('res2:', res2)
+console.log('res3:', res3)
+console.log('res4:', res4)
+console.log('res5:', res5)
+console.log('res6:', res6)
 
 //! 3. Ограничения дженериков
 function log1<T extends string | number>(data: T): T {
@@ -377,6 +377,33 @@ console.log(res10)
 console.log(res11)
 
 //! 5. Классы
+class Collection<T extends string | number> {
+  constructor(private _items: T[]) {}
+
+  add(value: T) {
+    this._items.push(value)
+  }
+
+  get items(): T[] {
+    return this._items
+  }
+}
+
+const col1 = new Collection<number>([1, 2, 3])
+col1.add(4)
+
+const col2 = new Collection<string>(['a', 'b'])
+col2.add('c')
+
+class List<R> extends Collection<string> {
+  constructor(public type: R) {
+    super(['a'])
+  }
+}
+
+const list1 = new List('qwerty')
+const list2 = new List(1977)
+
 //! Синтаксис классов. Методы. Геттеры и сеттеры
 class Human {
   date: Date
@@ -566,30 +593,3 @@ logger.table({
   b: 1.2,
   c: { a: 2.1, b: 2.2, c: 2.3, d: { a: 3.1, b: 3.2, c: 3.3 } },
 })
-
-class Collection<T extends string | number> {
-  constructor(private _items: T[]) {}
-
-  add(value: T) {
-    this._items.push(value)
-  }
-
-  get items(): T[] {
-    return this._items
-  }
-}
-
-const col1 = new Collection<number>([1, 2, 3])
-col1.add(4)
-
-const col2 = new Collection<string>(['a', 'b'])
-col2.add('c')
-
-class List<R> extends Collection<string> {
-  constructor(public type: R) {
-    super(['a'])
-  }
-}
-
-const list1 = new List('qwerty')
-const list2 = new List(1977)

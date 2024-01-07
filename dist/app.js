@@ -208,12 +208,12 @@ function merge(a, b) {
 }
 const res5 = merge({ a: 1 }, { b: 2, c: { d: 3 } });
 const res6 = res5.c.d.toFixed();
-console.log(res1);
-console.log(res2);
-console.log(res3);
-console.log(res4);
-console.log(res5);
-console.log(res6);
+console.log('res1:', res1);
+console.log('res2:', res2);
+console.log('res3:', res3);
+console.log('res4:', res4);
+console.log('res5:', res5);
+console.log('res6:', res6);
 function log1(data) {
     console.log(data);
     return data;
@@ -229,6 +229,31 @@ const res10 = getValue(obj, 'key');
 const res11 = getValue(obj2, 'test');
 console.log(res10);
 console.log(res11);
+class Collection {
+    _items;
+    constructor(_items) {
+        this._items = _items;
+    }
+    add(value) {
+        this._items.push(value);
+    }
+    get items() {
+        return this._items;
+    }
+}
+const col1 = new Collection([1, 2, 3]);
+col1.add(4);
+const col2 = new Collection(['a', 'b']);
+col2.add('c');
+class List extends Collection {
+    type;
+    constructor(type) {
+        super(['a']);
+        this.type = type;
+    }
+}
+const list1 = new List('qwerty');
+const list2 = new List(1977);
 class Human {
     date;
     constructor(date) {
@@ -336,28 +361,3 @@ logger.table({
     b: 1.2,
     c: { a: 2.1, b: 2.2, c: 2.3, d: { a: 3.1, b: 3.2, c: 3.3 } },
 });
-class Collection {
-    _items;
-    constructor(_items) {
-        this._items = _items;
-    }
-    add(value) {
-        this._items.push(value);
-    }
-    get items() {
-        return this._items;
-    }
-}
-const col1 = new Collection([1, 2, 3]);
-col1.add(4);
-const col2 = new Collection(['a', 'b']);
-col2.add('c');
-class List extends Collection {
-    type;
-    constructor(type) {
-        super(['a']);
-        this.type = type;
-    }
-}
-const list1 = new List('qwerty');
-const list2 = new List(1977);
