@@ -814,3 +814,314 @@ function nameSayer(fn: Function) {
 
 // nameSayer(user101.sayMyName) // так не работает, потому что потерялся контекст
 // nameSayer(user101.sayMyName.bind(user101)) // так работает, потому что привязали контекст, но есть способ лучше привязать контекст через создание функции декоратора Autobind
+
+//! Примеры использования декораторов
+
+//! Логгер
+function log11(target: any, key: string, descriptor: PropertyDescriptor) {
+  const fn = descriptor.value
+  descriptor.value = function (...args: any[]) {
+    console.log(`Entering ${key} with arguments: ${JSON.stringify(args)}`)
+    const result = fn.apply(this, args)
+    console.log(`Exiting ${key} with result: ${JSON.stringify(result)}`)
+    return result
+  }
+  return descriptor
+}
+
+class MyClass11 {
+  @log11
+  foo(a: string, b: number) {
+    return `${a} ${b}`
+  }
+}
+
+const myClass11 = new MyClass11()
+myClass11.foo('Result', 42)
+// Entering foo with arguments: ["Result",42]
+// Exiting foo with result: "Result 42"
+
+//! Мемоизация
+function memoize(target: any, key: string, descriptor: PropertyDescriptor) {
+  const fn = descriptor.value
+  const cache = new Map()
+
+  descriptor.value = function (...args: any[]) {
+    const cacheKey = `${key}_${JSON.stringify(args)}`
+
+    if (cache.has(cacheKey)) {
+      console.log(`Returning cached result for ${key}(${args})`)
+      return cache.get(cacheKey)
+    }
+
+    const result = fn.apply(this, args)
+    console.log(`Caching result for ${key}(${args})`)
+    cache.set(cacheKey, result)
+    return result
+  }
+
+  return descriptor
+}
+
+class MyClass12 {
+  @memoize
+  foo(a: number, b: number) {
+    // simulation of heavy computing (1 second)
+    const startTime = Date.now()
+    while (Date.now() - startTime < 1000) {}
+    return a + b
+  }
+
+  @memoize
+  bar() {
+    return Math.random()
+  }
+}
+
+const myClass12 = new MyClass12()
+console.log(myClass12.foo(41, 1)) // 42, calculated result
+console.log(myClass12.foo(41, 2)) // 43, calculated result
+console.log(myClass12.foo(41, 1)) // 42, cached result
+console.log(myClass12.foo(41, 1)) // 42, cached result
+console.log(myClass12.foo(41, 2)) // 43, cached result
+console.log(myClass12.foo(41, 2)) // 43, cached result
+12
+console.log(myClass12.bar()) // calculated result
+console.log(myClass12.bar()) // cached (the same result)
+console.log(myClass12.bar()) // cached (the same result)
+
+//!Debounce
+// function debounce(delay: number) {
+//   return function (target: any, key: string, descriptor: PropertyDescriptor) {
+//     let timer: ReturnType
+//     const fn = descriptor.value
+
+//     descriptor.value = function (...args: any[]) {
+//       clearTimeout(timer)
+//       timer = setTimeout(() => {
+//         fn.call(this, ...args)
+//       }, delay)
+//     }
+
+//     return descriptor
+//   }
+// }
+
+// class MyClass13 {
+//   @debounce(500)
+//   foo() {
+//     console.log('foo')
+//   }
+// }
+
+// const myClass13 = new MyClass13()
+// myClass13.foo()
+// myClass13.foo()
+// myClass13.foo()
+// myClass13.foo()
+// myClass13.foo()
+// myClass13.foo() // foo
+
+// setTimeout(() => myClass13.foo(), 1000) // foo
+
+//! Calculate execution time
+// import for node.js
+// import { performance } from "perf_hooks";
+
+const measure = (
+  target: any,
+  propertyKey: string,
+  descriptor: PropertyDescriptor
+) => {
+  const fn = descriptor.value
+
+  descriptor.value = function (...args: any[]) {
+    const start = performance.now()
+    const result = fn.apply(this, args)
+    const finish = performance.now()
+    console.log(`Execution time: ${finish - start} milliseconds`)
+    return result
+  }
+
+  return descriptor
+}
+
+class MyClass14 {
+  @measure
+  foo() {
+    console.log('foo')
+  }
+
+  @measure
+  bar() {
+    // simulation of heavy computing (1 second)
+    const startTime = Date.now()
+    while (Date.now() - startTime < 1000) {}
+    console.log('bar')
+  }
+}
+
+const myClass14 = new MyClass14()
+myClass14.foo() // foo
+// Execution time: 2.299999952316284 milliseconds
+
+myClass14.bar() // bar
+// Execution time: 1002.1000001430511 milliseconds
+
+//! Retry
+function retry(numRetries: number) {
+  return function (target: any, key: string, descriptor: PropertyDescriptor) {
+    const fn = descriptor.value
+
+    descriptor.value = async function (...args: any[]) {
+      for (let i = 0; i <= numRetries; i++) {
+        try {
+          return await fn.apply(this, args)
+        } catch (error: any) {
+          console.log(
+            `Method ${key} failed (${i + 1}/${numRetries + 1} retries): ${
+              error.message
+            }`
+          )
+          if (i === numRetries) {
+            throw error
+          }
+        }
+      }
+    }
+
+    return descriptor
+  }
+}
+
+class MyClass15 {
+  @retry(3)
+  async fetch(url: string) {
+    const response = await fetch(url)
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch ${url}: ${response.status} ${response.statusText}`
+      )
+    }
+    return response.json()
+  }
+}
+
+// const myClass15 = new MyClass15()
+// MyClass15.fetch('https://jsonplaceholder.typicode.com/posts/1').then(
+//   console.log
+// )
+
+//! Deprecated
+function deprecated(message: string) {
+  return function (target: any, key: string, descriptor: PropertyDescriptor) {
+    const fn = descriptor.value
+    descriptor.value = function (...args: any[]) {
+      console.warn(`Method ${key}() is deprecated. ${message}`)
+      return fn.apply(this, args)
+    }
+    return descriptor
+  }
+}
+
+class MyClass16 {
+  @deprecated('Please use bar() instead.')
+  foo(): void {
+    console.log('foo')
+  }
+
+  bar(): void {
+    console.log('bar')
+  }
+}
+
+const myClass16 = new MyClass16()
+myClass16.foo()
+
+/*
+Такое поведение — и есть асинхронная работа. useEffect() никогда не сработает одновременно с обновлением самого компонента, а только на следующий тик браузера, на следующий заход событийного цикла (Event Loop). Чтобы было понятней, можете представить, что useEffect() срабатывает наподобие функции setTimeout() с задержкой 0. Если смотреть в браузер, то может показаться, что всё произошло одновременно, но на самом деле — строго последовательно, просто очень быстро.
+
+И наконец, в третьих, если в коллбеке хука useEffect() вернуть в return ещё один, другой коллбек, то этот второй коллбек будет выполняться в момент, когда компонент удаляется. Получается как замена этапа размонтирования в жизненном цикле. Такой приём часто используют для подписки и отписки от событий, которые нужно обработать вне React-приложения. В таких случаях приходится использовать обычный addEventListener(), так как средства React уже не помогут.
+*/
+
+/*
+import { useEffect, useState } from 'react';
+import styles from './App.module.css';
+
+export const App = ({ siteUrl }) => {
+  const [products, setProducts] = useState([]);
+
+  const onClickHandler = () => {};
+
+  useEffect(() => {
+    document.addEventListener('click', onClickHandler);
+
+    return () => document.removeEventListener('click', onClickHandler);
+  }, [siteUrl]);
+
+  return (
+    <div className={styles.app}>
+      {products.map(({ id, name, price }) => (
+        <div key={id}>{name} - {price} руб</div>
+      ))}
+    </div>
+  );
+};
+*/
+
+/*
+Если внимательно прочитать описание хука useEffect() в документации React, то можно увидеть, что второй коллбек (тот который возвращается в первом), выполняется не только при размонтировании компонента, но и каждый раз перед повторным выполнением эффекта. Это может звучать сложновато для начинающего. Такой приём используется не часто, но понимать принцип работы хука всё равно нужно. Проще говоря, после самого первого рендера компонента вызовется только первый коллбек, переданный в useEffect(). А при каждом следующем рендере, сначала запустится второй коллбек, который был создан на прошлом рендере, а сразу после него — первый коллбек текущего рендера:
+*/
+
+/*
+import { useEffect, useState } from 'react';
+import styles from './App.module.css';
+
+export const App = () => {
+  const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    console.log('Первый-' + counter);
+
+    return () => console.log('Второй-' + counter);
+  }, [counter]);
+
+  return (
+    <div className={styles.app}>
+      <button onClick={() => setCounter(counter + 1)}>+ 1</button>
+    </div>
+  );
+};
+*/
+
+/*
+Кстати, в useEffect() можно вообще не передавать массив зависимостей вторым аргументом. Тогда он просто будет срабатывать всегда, после каждого рендера компонента.
+
+Сделав функциональные компоненты в React на замену классовых, разработчики оставили возможность выполнять все те же трюки, как и раньше. Просто в другом формате — более удобном, потому что декларативном. Но это не единственный плюс. Хук useEffect() можно легко вынести в другой файл и переиспользовать, а в классовых компонентах с этим было намного сложнее — пришлось бы выносить код по частичкам из разных методов жизненного цикла. Было бы более сложно и запутанно.
+
+Возвращаясь к HTTP-запросам — с хуком useEffect() можно использовать вообще любой JavaScript-код, необязательно именно функцию fetch(). Для работы на более низком уровне можно создать XHR-запрос с помощью XMLHttpRequest. А есть наоборот — сторонние библиотеки для работы на более высоком уровне, например — Axios. Это по сути обёртка над XMLHttpRequest, которая используется так же удобно, как fetch(), но имеет более богатые возможности. Почитать про XMLHttpRequest можно на MDN. Когда-то это был единственный способ делать запросы на сервер из JavaScript в браузере.
+
+А если хотите узнать чуть больше про Axios, то куда нужно идти? Правильно — сначала в Google, а оттуда — в официальную документацию. Всё как обычно.
+
+Промежуточные итоги
+
+Рендер — создание виртуального представления компонента на основе его состояния и пропсов. Происходит при монтировании компонента, а также при его обновлении. Не обязательно приводит к изменению DOM, но создает обновленное виртуальное представление компонента.
+
+Монтирование — компонент добавлен на странцу (в DOM).
+
+Обновление — обновление виртуального представления компонента при изменении его состояния или пропсов с последующим обновлением соответствующих элементов на странице (в DOM).
+
+Размонтирование — компонент удален со страницы (из DOM).
+
+useEffect() — это хук, который позволяет выполнять код на разных этапах жизненного цикла компонента, а также реагировать на изменения зависимостей.
+Часто используется для синхронизации компонента с внешней системой (например, выполнения сетевых запросов).
+Может использоваться как замена методам жизненного цикла классовых компонентов: componentDidMount(), componentDidUpdate(), componentWillUnmount() (познакомимся с ними в одном из следующих уроков).
+Массив зависимостей в useEffect() передается вторым аргументом, в нем содержатся переменные, значения которых должны быть отслеживаемыми.
+Когда одно из значений в массиве зависимостей изменяется, вызывается функция, переданная первым аргументом в useEffect().
+Кроме того, можно передать пустой массив зависимостей, чтобы указать, что переданная функция должна выполниться только один раз при монтировании компонента.
+Если массив зависимостей вовсе не указан, то переданная функция будет выполняться при любом обновлении компонента.
+Внутри функции, переданной первым аргументом в useEffect(), можно возвращать функцию очистки. React будет вызывать эту функцию каждый раз перед повторным выполнением эффекта, а также в конечном итоге при размонтировании компонента.
+Axios — это популярная JavaScript-библиотека, которая используется для выполнения HTTP-запросов из браузера или Node.js.
+Работает на основе промисов, что позволяет легко использовать асинхронные операции.
+Предоставляет удобный API, который облегчает отправку запросов к серверу и обработку ответов.
+*/
