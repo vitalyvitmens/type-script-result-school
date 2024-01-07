@@ -430,3 +430,30 @@ User7 = __decorate([
     ClassDecorator2
 ], User7);
 const user7 = new User7(true);
+function Component2(props) {
+    return function (constructor) {
+        const node = document.querySelector(props.selector);
+        const instance = new constructor('Egor');
+        if (node) {
+            node.insertAdjacentHTML('afterbegin', props.template);
+            node.querySelector('span').textContent = instance.name;
+        }
+    };
+}
+let UserComponent2 = class UserComponent2 {
+    name;
+    constructor(name) {
+        this.name = name;
+        console.log('Constructor2');
+    }
+};
+UserComponent2 = __decorate([
+    Component2({
+        selector: '#app',
+        template: `
+  <h1>This is User Component</h1>
+  <h2>User name is <span></span></h2>
+  `,
+    })
+], UserComponent2);
+const user8 = new UserComponent2('Vitaly');

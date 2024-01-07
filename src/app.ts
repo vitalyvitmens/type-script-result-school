@@ -709,3 +709,36 @@ class User7 {
 }
 
 const user7 = new User7(true)
+
+//! Практический пример. Декоратор с параметрами
+interface ComponentProps {
+  template: string
+  selector: string
+}
+
+function Component2(props: ComponentProps) {
+  return function (constructor: any) {
+    const node = document.querySelector(props.selector)
+    const instance = new constructor('Egor')
+
+    if (node) {
+      node.insertAdjacentHTML('afterbegin', props.template)
+      node.querySelector('span')!.textContent = instance.name
+    }
+  }
+}
+
+@Component2({
+  selector: '#app',
+  template: `
+  <h1>This is User Component</h1>
+  <h2>User name is <span></span></h2>
+  `,
+})
+class UserComponent2 {
+  constructor(public name: string) {
+    console.log('Constructor2')
+  }
+}
+
+const user8 = new UserComponent2('Vitaly')
