@@ -451,7 +451,6 @@ class User5 {
 type UserParams = Required<ConstructorParameters<typeof User5>>[0] // type UserParams = string
 type UserParams2 = Required<ConstructorParameters<typeof User5>>[1] // type UserParams = number
 
-
 //! 5. Классы
 class Collection<T extends string | number> {
   constructor(private _items: T[]) {}
@@ -669,3 +668,44 @@ logger.table({
   b: 1.2,
   c: { a: 2.1, b: 2.2, c: 2.3, d: { a: 3.1, b: 3.2, c: 3.3 } },
 })
+
+//! Дектораторы
+class User6 {
+  isProgrammer?: boolean
+
+  constructor(public name: string) {}
+
+  sayMyName() {
+    console.log(this.name)
+  }
+}
+
+function makeProgrammer(user: User6) {
+  user.isProgrammer = true
+  return user
+}
+
+const user6 = makeProgrammer(new User6('Vitaly'))
+
+console.log(user6.isProgrammer)
+user6.sayMyName()
+
+//! Паттерн “Декоратор”. Декораторы класса
+// В файле tsconfig.json включаем поле: "experimentalDecorators": true,                   /* Enable experimental support for legacy experimental decorators. */
+function ClassDecorator(target: Function) {
+  console.log('Class Decorator', target)
+}
+
+function ClassDecorator2(target: Function) {
+  console.log('Class Decorator 2', target)
+}
+
+@ClassDecorator
+@ClassDecorator2
+class User7 {
+  constructor(public isProgrammer: boolean) {
+    console.log('Constructor')
+  }
+}
+
+const user7 = new User7(true)

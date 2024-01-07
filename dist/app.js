@@ -1,4 +1,10 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 function sum(a, b) {
     return a + b;
 }
@@ -229,6 +235,34 @@ const res10 = getValue(obj, 'key');
 const res11 = getValue(obj2, 'test');
 console.log(res10);
 console.log(res11);
+const key2 = 'name';
+const str2 = 'hello';
+const user2 = { age: 15, name: 'Egor' };
+const key3 = 'name';
+function createAndValidate(name, age) {
+    const newUser3 = {};
+    if (name.length > 0) {
+        newUser3.name = name;
+    }
+    if (age >= 18) {
+        newUser3.age = age;
+    }
+    return newUser3;
+}
+const user3 = { age: 15, name: 'Egor' };
+const createRequiredUser3 = { id: 1, age: 15, name: 'Egor' };
+function log4(data, num) {
+    console.log(data, num);
+    return false;
+}
+class User5 {
+    name;
+    age;
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}
 class Collection {
     _items;
     constructor(_items) {
@@ -361,3 +395,38 @@ logger.table({
     b: 1.2,
     c: { a: 2.1, b: 2.2, c: 2.3, d: { a: 3.1, b: 3.2, c: 3.3 } },
 });
+class User6 {
+    name;
+    isProgrammer;
+    constructor(name) {
+        this.name = name;
+    }
+    sayMyName() {
+        console.log(this.name);
+    }
+}
+function makeProgrammer(user) {
+    user.isProgrammer = true;
+    return user;
+}
+const user6 = makeProgrammer(new User6('Vitaly'));
+console.log(user6.isProgrammer);
+user6.sayMyName();
+function ClassDecorator(target) {
+    console.log('Class Decorator', target);
+}
+function ClassDecorator2(target) {
+    console.log('Class Decorator 2', target);
+}
+let User7 = class User7 {
+    isProgrammer;
+    constructor(isProgrammer) {
+        this.isProgrammer = isProgrammer;
+        console.log('Constructor');
+    }
+};
+User7 = __decorate([
+    ClassDecorator,
+    ClassDecorator2
+], User7);
+const user7 = new User7(true);
