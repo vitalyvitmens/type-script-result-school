@@ -510,5 +510,150 @@ user101.sayMyName();
 function nameSayer(fn) {
     fn();
 }
-nameSayer(user101.sayMyName);
-nameSayer(user101.sayMyName.bind(user101));
+function log11(target, key, descriptor) {
+    const fn = descriptor.value;
+    descriptor.value = function (...args) {
+        console.log(`Entering ${key} with arguments: ${JSON.stringify(args)}`);
+        const result = fn.apply(this, args);
+        console.log(`Exiting ${key} with result: ${JSON.stringify(result)}`);
+        return result;
+    };
+    return descriptor;
+}
+class MyClass11 {
+    foo(a, b) {
+        return `${a} ${b}`;
+    }
+}
+__decorate([
+    log11
+], MyClass11.prototype, "foo", null);
+const myClass11 = new MyClass11();
+myClass11.foo('Result', 42);
+function memoize(target, key, descriptor) {
+    const fn = descriptor.value;
+    const cache = new Map();
+    descriptor.value = function (...args) {
+        const cacheKey = `${key}_${JSON.stringify(args)}`;
+        if (cache.has(cacheKey)) {
+            console.log(`Returning cached result for ${key}(${args})`);
+            return cache.get(cacheKey);
+        }
+        const result = fn.apply(this, args);
+        console.log(`Caching result for ${key}(${args})`);
+        cache.set(cacheKey, result);
+        return result;
+    };
+    return descriptor;
+}
+class MyClass12 {
+    foo(a, b) {
+        const startTime = Date.now();
+        while (Date.now() - startTime < 1000) { }
+        return a + b;
+    }
+    bar() {
+        return Math.random();
+    }
+}
+__decorate([
+    memoize
+], MyClass12.prototype, "foo", null);
+__decorate([
+    memoize
+], MyClass12.prototype, "bar", null);
+const myClass12 = new MyClass12();
+console.log(myClass12.foo(41, 1));
+console.log(myClass12.foo(41, 2));
+console.log(myClass12.foo(41, 1));
+console.log(myClass12.foo(41, 1));
+console.log(myClass12.foo(41, 2));
+console.log(myClass12.foo(41, 2));
+12;
+console.log(myClass12.bar());
+console.log(myClass12.bar());
+console.log(myClass12.bar());
+const measure = (target, propertyKey, descriptor) => {
+    const fn = descriptor.value;
+    descriptor.value = function (...args) {
+        const start = performance.now();
+        const result = fn.apply(this, args);
+        const finish = performance.now();
+        console.log(`Execution time: ${finish - start} milliseconds`);
+        return result;
+    };
+    return descriptor;
+};
+class MyClass14 {
+    foo() {
+        console.log('foo');
+    }
+    bar() {
+        const startTime = Date.now();
+        while (Date.now() - startTime < 1000) { }
+        console.log('bar');
+    }
+}
+__decorate([
+    measure
+], MyClass14.prototype, "foo", null);
+__decorate([
+    measure
+], MyClass14.prototype, "bar", null);
+const myClass14 = new MyClass14();
+myClass14.foo();
+myClass14.bar();
+function retry(numRetries) {
+    return function (target, key, descriptor) {
+        const fn = descriptor.value;
+        descriptor.value = async function (...args) {
+            for (let i = 0; i <= numRetries; i++) {
+                try {
+                    return await fn.apply(this, args);
+                }
+                catch (error) {
+                    console.log(`Method ${key} failed (${i + 1}/${numRetries + 1} retries): ${error.message}`);
+                    if (i === numRetries) {
+                        throw error;
+                    }
+                }
+            }
+        };
+        return descriptor;
+    };
+}
+class MyClass15 {
+    async fetch(url) {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+    }
+}
+__decorate([
+    retry(3)
+], MyClass15.prototype, "fetch", null);
+function deprecated(message) {
+    return function (target, key, descriptor) {
+        const fn = descriptor.value;
+        descriptor.value = function (...args) {
+            console.warn(`Method ${key}() is deprecated. ${message}`);
+            return fn.apply(this, args);
+        };
+        return descriptor;
+    };
+}
+class MyClass16 {
+    foo() {
+        console.log('foo');
+    }
+    bar() {
+        console.log('bar');
+    }
+}
+__decorate([
+    deprecated('Please use bar() instead.')
+], MyClass16.prototype, "foo", null);
+const myClass16 = new MyClass16();
+myClass16.foo();
