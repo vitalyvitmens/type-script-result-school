@@ -5,9 +5,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 function sum(a, b) {
     return a + b;
 }
@@ -430,8 +427,7 @@ let User7 = class User7 {
 };
 User7 = __decorate([
     ClassDecorator,
-    ClassDecorator2,
-    __metadata("design:paramtypes", [Boolean])
+    ClassDecorator2
 ], User7);
 const user7 = new User7(true);
 function Component2(props) {
@@ -452,8 +448,7 @@ UserComponent2 = __decorate([
   <h1>This is User Component</h1>
   <h2>User name is <span></span></h2>
   `,
-    }),
-    __metadata("design:paramtypes", [String])
+    })
 ], UserComponent2);
 const user8 = new UserComponent2('Vitaly');
 function MaxChildren(limit) {
@@ -482,10 +477,38 @@ class User9 {
     }
 }
 __decorate([
-    MaxChildren(10),
-    __metadata("design:type", Number)
+    MaxChildren(10)
 ], User9.prototype, "children", void 0);
 const user91 = new User9(100);
 console.log('user91.children:', user91.children);
 const user92 = new User9(5);
 console.log('user92.children:', user92.children);
+function Autobind(target, name, descriptor) {
+    const newDescriptor = {
+        enumerable: false,
+        configurable: true,
+        get() {
+            return descriptor.value.bind(this);
+        },
+    };
+    return newDescriptor;
+}
+class User10 {
+    name;
+    constructor(name) {
+        this.name = name;
+    }
+    sayMyName() {
+        console.log(this?.name);
+    }
+}
+__decorate([
+    Autobind
+], User10.prototype, "sayMyName", null);
+const user101 = new User10('Egor');
+user101.sayMyName();
+function nameSayer(fn) {
+    fn();
+}
+nameSayer(user101.sayMyName);
+nameSayer(user101.sayMyName.bind(user101));

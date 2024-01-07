@@ -782,3 +782,35 @@ const user92 = new User9(5)
 console.log('user92.children:', user92.children)
 
 //! Декораторы методов
+function Autobind(target: any, name: string, descriptor: PropertyDescriptor) {
+  // console.log('target:', target)
+  // console.log('name:', name)
+  // console.log('descriptor:', descriptor)
+  const newDescriptor: PropertyDescriptor = {
+    enumerable: false,
+    configurable: true,
+    get() {
+      return descriptor.value.bind(this)
+    },
+  }
+
+  return newDescriptor
+}
+class User10 {
+  constructor(public name: string) {}
+
+  @Autobind
+  sayMyName() {
+    console.log(this?.name)
+  }
+}
+
+const user101 = new User10('Egor')
+user101.sayMyName()
+
+function nameSayer(fn: Function) {
+  fn()
+}
+
+// nameSayer(user101.sayMyName) // так не работает, потому что потерялся контекст
+// nameSayer(user101.sayMyName.bind(user101)) // так работает, потому что привязали контекст, но есть способ лучше привязать контекст через создание функции декоратора Autobind
