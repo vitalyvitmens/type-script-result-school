@@ -1161,3 +1161,59 @@ const fn2: Lib.ILib = {
 import chroma from 'chroma-js'
 
 console.log(chroma('#D4F880').darken().hex())
+
+//! Настройка проекта на Node.js + TypeScript
+/*
+- npm init -y (инициализируем проект)
+- npm i -D typescript (устанавливаем ts в режиме разработки)
+- npm i @types/node -D (устанавливаем типизацию для node js в режиме разработки)
+- npx tsc --init (генерируем tsconfig.json)
+- заходим в файл tsconfig.json и настраиваем ts конфигурацию:
+  - "target": "es2018",
+  - "lib": ["ES6"], 
+  - "module": "NodeNext",
+  - "rootDir": "./src", 
+  - "resolveJsonModule": true, 
+  - "allowJs": true,  
+  - "checkJs": true, 
+  - "sourceMap": true,
+  - "outDir": "./build",  
+  - "removeComments": true, 
+  - "esModuleInterop": true,
+  - "forceConsistentCasingInFileNames": true, 
+  - "strict": true,
+  - "noImplicitAny": true, 
+  - "skipLibCheck": true 
+    },
+  "include": ["src/**\/*"],
+  "exclude": ["node_modules"],
+  "lib": ["esnext"],
+  "ts-node": {
+    "esm": true
+  }
+- заходим в файл package.json и после "main" добавляем параметр:
+  - "type": "module",
+- создаем в корне папку src внутри которой создаём два файла src\index.ts и src\module.ts это нужно для проверки работоспособности настроек
+- в файл src\module.ts добавляем код:
+  - export const MY_NUM = 42
+- в файл src\index.ts добавляем код для проверки автоимпорта:
+  - console.log(MY_NUM) 
+- срабатывает автоимпорт который добавляется import { MY_NUM } from './module.js' обратите внимание что расширение в автоимпорте .js хотя файл имеет расширение .ts это особенность модульной системы
+- далее создаем инфраструктуру для разработки и продакшн:
+  - npm i -D ts-node nodemon
+  - в корне проекта создаем файл nodemon.json и указываем в нем базовые настройки:
+    - {
+  "watch": ["src"],
+  "ext": ".ts,.js",
+  "ignore": ["node_modules"],
+  "exec": "npx ts-node ./src/index.ts"
+}
+- заходим в файл package.json и в "scripts" создаём режим для разработки:
+  - "dev": "npx nodemon"
+- добавляем режим для продакшн:
+- npm i -D rimraf (нужен для очистки папки build которая появляется в корне проекта после выполнения команды npx tsc)
+- заходим в файл package.json и в "scripts" создаём режим для продакшн:
+  - "build": "rimraf ./build && npx tsc"
+- заходим в файл package.json и в "scripts" создаём режим для запуска проекта:
+  -  "start": "npm run build && node build/index.js"
+*/
