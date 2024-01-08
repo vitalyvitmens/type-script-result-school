@@ -657,3 +657,11 @@ __decorate([
 ], MyClass16.prototype, "foo", null);
 const myClass16 = new MyClass16();
 myClass16.foo();
+var Lib;
+(function (Lib) {
+    Lib.NUM = 42;
+    const privateConst = 'test';
+    Lib.NUM_2 = privateConst + ' hello';
+})(Lib || (Lib = {}));
+console.log(Lib.NUM);
+console.log(Lib.NUM_2);
