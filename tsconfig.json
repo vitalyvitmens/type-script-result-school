@@ -107,7 +107,7 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   // "files": ["src/app.ts", "src/task.ts"],
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "src/task2.ts"],
   "exclude": ["./tech/**/*.ts"],
   // "extends": "./path/to/base/tsconfig.json"
 }
