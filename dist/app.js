@@ -5,6 +5,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 function sum(a, b) {
     return a + b;
 }
@@ -665,3 +669,8 @@ var Lib;
 })(Lib || (Lib = {}));
 console.log(Lib.NUM);
 console.log(Lib.NUM_2);
+const fn2 = {
+    log() { },
+};
+const chroma_js_1 = __importDefault(require("chroma-js"));
+console.log((0, chroma_js_1.default)('#D4F880').darken().hex());
