@@ -47,7 +47,8 @@ interface Post {
 
 // Определяем тип NormalizedData
 type NormalizedData = {
-  byId: { [key: string]: Post }
+  // byId: { [key: string]: Post }
+  byId: Record<string, Post>
   allIds: string[]
 }
 
