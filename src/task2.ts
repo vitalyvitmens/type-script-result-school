@@ -54,14 +54,14 @@ type NormalizedData = {
 // Определяем функцию normalizeData
 const normalizeData = (unnormalizedData: Post[]): NormalizedData => {
   // Создаем пустой объект result
-  let result: NormalizedData = {
+  const result: NormalizedData = {
     byId: {},
     allIds: [],
   }
   // Проходим по массиву unnormalizedData
   unnormalizedData.forEach((post) => {
     // Получаем идентификатор поста
-    let postId: string = post.id
+    const postId: string = post.id
     // Добавляем в объект result.byId пару ключ-значение
     result.byId[postId] = post
     // Добавляем в массив result.allIds значение postId

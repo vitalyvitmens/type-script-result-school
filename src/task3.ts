@@ -32,10 +32,9 @@ getData(COMMENTS_URL).then((data) => {
   // Проходим по массиву data
   data.forEach((comment) => {
     // Получаем id и email комментария
-    let id = comment.id
-    let email = comment.email
+    const { id, email } = comment
     // Формируем строку в нужном формате
-    let output = `ID: ${id}, Email: ${email}`
+    const output = `ID: ${id}, Email: ${email}`
     // Выводим строку в консоль
     console.log(output)
   })
